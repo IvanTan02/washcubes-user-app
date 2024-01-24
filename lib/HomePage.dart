@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                       width: 200,
                       height: 200,
                       child: Image.asset(
-                          'assets/images/special_event_${index + 1}.png'
+                          'assets/images/homepage/special_event_${index + 1}.png'
                       ),
                     );
                   },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'NearbyLocationPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +12,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: HomePage(),
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,10 @@ class HomeScreen extends StatelessWidget {
               // Location Button
               ElevatedButton(
                 onPressed: () {
-                  // Handle button press
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NearbyLocationPage()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
@@ -143,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           const Text(
-                            '“Leave it to Trimi - cleaning\nmagic in progress!”',
+                            '“Leave it to Trimi - cleaning magic in progress!”',
                             style: TextStyle(
                               fontSize: 14,
                             ),
@@ -195,19 +199,19 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     // Right side (4 flex)
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        // Placeholder for the image
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: const DecorationImage(
-                            image: AssetImage('assets/images/hp_order_1.png'),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Expanded(
+                    //   flex: 4,
+                    //   child: Container(
+                    //     // Placeholder for the image
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(12),
+                    //       image: const DecorationImage(
+                    //         image: AssetImage('assets/images/hp_order_1.png'),
+                    //         fit: BoxFit.cover,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               )

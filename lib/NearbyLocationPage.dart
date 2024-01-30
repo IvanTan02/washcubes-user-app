@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'NearbyLocationListPage.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 
 class NearbyLocationPage extends StatefulWidget {
   const NearbyLocationPage({Key? key}) : super(key: key);
@@ -48,15 +48,6 @@ class _NearbyLocationPageState extends State<NearbyLocationPage> {
           title: 'Sunway Geo Residences',
         ),
       ),
-      Marker(
-        markerId: MarkerId('marker_4'),
-        position: LatLng(2.949589252471924, 101.66461944580078),
-        icon: BitmapDescriptor.defaultMarkerWithHue(
-            BitmapDescriptor.hueAzure),
-        infoWindow: InfoWindow(
-          title: 'Garden Plaza',
-        ),
-      ),
     };
   }
 
@@ -75,7 +66,10 @@ class _NearbyLocationPageState extends State<NearbyLocationPage> {
                 });
                 _showAlertDialog(context);
               },
-              child: const Icon(Icons.map),
+              child: const Icon(
+                Icons.map,
+                color: Colors.black,
+              ),
               backgroundColor: Color(0xFFD7ECF7),
               mini: true,
             ),

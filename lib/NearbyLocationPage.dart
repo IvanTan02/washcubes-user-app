@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'NearbyLocationListPage.dart';
 // import 'package:location/location.dart';
+import 'HomePage.dart';
 
 class NearbyLocationPage extends StatefulWidget {
   const NearbyLocationPage({Key? key}) : super(key: key);
@@ -56,6 +57,14 @@ class _NearbyLocationPageState extends State<NearbyLocationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nearby Locations'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
         actions: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10),

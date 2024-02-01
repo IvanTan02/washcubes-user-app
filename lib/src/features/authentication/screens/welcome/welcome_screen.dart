@@ -9,6 +9,7 @@ import 'package:device_run_test/src/features/authentication/screens/home/HomePag
 import 'package:device_run_test/src/constants/colors.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:device_run_test/src/features/authentication/screens/onboarding/onboarding_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             TextButton(
               onPressed: () {
                 Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const HomePage()),
+                  context, MaterialPageRoute(builder: (context) => OnboardingScreen()),
                 );
               },
               child: const Text(

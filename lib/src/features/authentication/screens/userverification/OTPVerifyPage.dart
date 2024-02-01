@@ -1,16 +1,71 @@
+import 'dart:convert';
+
 import 'package:device_run_test/src/constants/colors.dart';
 import 'package:device_run_test/src/features/authentication/screens/home/HomePage.dart';
 import 'package:device_run_test/src/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:http/http.dart' as http;
+import 'package:device_run_test/config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OTPVerifyPage extends StatelessWidget {
-  OTPVerifyPage({Key? key, required this.source}) : super(key: key);
-  final String source;
-  //Generate 6 controllers for the textfields
-  final List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
-  final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
-  final List<bool> isTextFieldEnabled = List.generate(6, (index) => index == 0);
+class OTPVerifyPage extends StatefulWidget {
+  @override
+  _OTPPageState createState() => _OTPPageState();
+}
+
+class _OTPPageState extends State<OTPVerifyPage> {
+
+  late SharedPreferences prefs;
+  TextEditingController phoneNumberController = TextEditingController();
+  String currentText = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initSharedPref();
+  }
+
+  void initSharedPref() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  void resendOTP() async {
+    await http.post(Uri.parse(otpverification));
+  }
+
+  void otpValidation() async {
+      var response = await http.post(Uri.parse(registration), body: {"otpRes": phoneNumberController.text});
+      var jsonResponse = jsonDecode(response.body);
+      if (jsonResponse['status'] == 'existingUser') {
+        var myToken = jsonResponse['token'];
+        prefs.setString('token', myToken);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomePage(token: myToken),),(Route<dynamic> route) => false);
+      } else if (jsonResponse['status'] == 'newUser') {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => OnboardingScreen(),),(Route<dynamic> route) => false);
+      } else if (jsonResponse['status'] == 'wrongOTP') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('The OTP entered is incorrect. Please try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -27,53 +82,39 @@ class OTPVerifyPage extends StatelessWidget {
             const SizedBox(height: 30.0),
             Text('Enter the OTP sent to +60*********', style: Theme.of(context).textTheme.headlineMedium,),
             const SizedBox(height: 30.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              //Generate 6 containers with textfields for OTP input
-              children: List.generate(6, (index) => Container(
-                width: 40,
-                height: 40,
-                margin: const EdgeInsets.only(right: 10),
-                decoration:  BoxDecoration (
-                  border:  Border.all(color: AppColors.cBlueColor1),
-                  borderRadius:  BorderRadius.circular(10),
-                ),
-                child: Center(
-                  child: TextField(
-                    controller: controllers[index],// Connecting Controller to Each TextField
-                    focusNode: focusNodes[index], // Assign FocusNode
-                    enabled: isTextFieldEnabled[index], // Enable or disable the TextField
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    keyboardType: TextInputType.number,
-                    maxLength: 1,
-                    textAlign: TextAlign.center,
-                    decoration: const InputDecoration(
-                      counterText: '',
-                      border: InputBorder.none
-                    ),
-                    onChanged: (value) {
-                      // Check if current TextField is filled
-                      if (value.isNotEmpty) {
-                        if (index == 5 && _isOTPFilled()) {
-                          // Move to Post-verification Process Depending on the Enter Method
-                          _handlePostVerification(context);
-                        } else if (index < 5){
-                          // Focus the next TextField
-                          isTextFieldEnabled[index + 1] = true;
-                          FocusScope.of(context).requestFocus(focusNodes[index + 1]);
-                          
-                        }
-                      }
-                    },
-                  ),
-                ),
+            PinCodeTextField(
+              appContext: context,
+              controller: phoneNumberController,
+              length: 6,
+              enableActiveFill: true,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                borderRadius: BorderRadius.circular(8),
+                fieldWidth: 50,
+                inactiveColor: Colors.white,
+                selectedColor: Colors.lightBlue,
+                activeFillColor: Colors.white,
+                selectedFillColor: Colors.white,
+                inactiveFillColor: Colors.grey
+                
               ),
-              ),
+              onChanged: (value) {
+                setState(() {
+                  // currentText = value;
+                });
+              },
+              onCompleted: (value) {
+                otpValidation();
+              },
+              beforeTextPaste: (text) {
+                return true;
+              },
             ),
-            const SizedBox(height: 30.0),
             Text("Didn't receive OTP code?", style: Theme.of(context).textTheme.headlineMedium,),
             TextButton(
-              onPressed: () {null;},// Add your desired action here
+              onPressed: () {resendOTP();},
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -88,27 +129,5 @@ class OTPVerifyPage extends StatelessWidget {
         ),
       ),
     );
-  }
-  bool _isOTPFilled() {
-    // Check if all OTP fields are filled
-    return controllers.every((controller) => controller.text.isNotEmpty);
-  }
-
-  void _handlePostVerification(BuildContext context) {
-    if (source == 'login') {
-      // Navigate Login Users to Home Page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
-      );
-    } else if (source == 'signup') {
-      // Navigate New Users to Onboarding Page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
-      );
-    }
-
-    // Add any common actions you want to perform after OTP verification
   }
 }

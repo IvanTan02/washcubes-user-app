@@ -48,6 +48,8 @@ dependencies:
   pin_code_fields: ^8.0.1
   shared_preferences: ^2.2.2
   jwt_decoder: ^2.0.1
+  dash_chat_2:
+  chat_gpt_sdk:
 
 dev_dependencies:
   flutter_test:

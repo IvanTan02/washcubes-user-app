@@ -1,5 +1,5 @@
 import 'package:device_run_test/src/constants/image_strings.dart';
-import 'package:device_run_test/src/features/authentication/screens/chatbot/chatbot_screen.dart';
+import 'package:device_run_test/src/features/authentication/screens/chatbot/chatbotScreen.dart';
 import 'package:device_run_test/src/features/authentication/screens/nearbylocation/NearbyLocationPage.dart';
 import 'package:device_run_test/src/features/authentication/screens/setting/SettingMainPage.dart';
 import 'package:flutter/material.dart';
@@ -266,7 +266,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const ChatBotScreen()),
+            context, MaterialPageRoute(builder: (context) => const ChatbotScreen()),
           );
         },
         tooltip: 'Increment',

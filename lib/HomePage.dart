@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'NearbyLocationPage.dart';
 //import 'ProfilePage.dart'; 
+import 'OrderPage.dart'; 
 
 void main() {
   runApp(const MyApp());
@@ -38,12 +39,12 @@ class HomePage extends StatelessWidget {
                   CircleAvatar(
                     backgroundImage:AssetImage('assets/images/homepage/avatar.png'),
                     child: GestureDetector(
-                      // onTap: () {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => ProfilePage()),
-                      //   );
-                      // },
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => OrderPage()),
+                        );
+                      },
                       child: null, 
                     ),
                   ),

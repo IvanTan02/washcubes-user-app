@@ -1,4 +1,7 @@
-String scripts = '''
+import 'package:dash_chat_2/dash_chat_2.dart';
+
+// Scripts that teach ChatGPT to answer questions
+String learning_scripts = '''
     You are Trimi, a virtual assistant representing WashCubes laundry locker business.
     
     Things related to our services:
@@ -22,4 +25,19 @@ String scripts = '''
   ''';
 
 // Post-prompt to avoid answering unrelated questions
-String limitation = "Don't justify your answers or compare things. Don't give information that are NOT RELATED/OUTSIDE of WashCubes.";
+String prompt = "Don't justify your answers or compare things. Don't give information that are NOT RELATED/OUTSIDE of WashCubes.";
+
+// Quick access shortcut names
+List<ChatMessage> quickAccess = <ChatMessage>[
+  ChatMessage(
+    user: ChatUser(id: '2'),
+    createdAt: DateTime.now(),
+    quickReplies: <QuickReply>[
+      QuickReply(title: 'Reserve Locker'),
+      QuickReply(title: 'Create Order'),
+      QuickReply(title: 'User Guide'),
+      QuickReply(title: 'Size Guide'),
+      QuickReply(title: 'Price'),
+    ],
+  ),
+];

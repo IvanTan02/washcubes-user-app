@@ -39,12 +39,12 @@ class HomePage extends StatelessWidget {
                   CircleAvatar(
                     backgroundImage:AssetImage('assets/images/homepage/avatar.png'),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => OrderPage()),
-                        );
-                      },
+                      // onTap: () {
+                      //   Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => ProfilePage()),
+                      //   );
+                      // },
                       child: null, 
                     ),
                   ),
@@ -194,7 +194,10 @@ class HomePage extends StatelessWidget {
                           const SizedBox(height: 10),
                           ElevatedButton(
                             onPressed: () {
-                              // Implement the button action
+                              Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => OrderPage()),
+                                    );
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.white, // Button color

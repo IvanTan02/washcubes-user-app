@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'NearbyLocationPage.dart';
 
-void main() {
-  runApp(NearbyLocationListPage());
-}
 
 class NearbyLocationListPage extends StatelessWidget {
   @override

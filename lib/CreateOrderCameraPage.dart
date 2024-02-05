@@ -1,57 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'CreateOrderPage.dart';
 
 class CreateOrderCameraPage extends StatefulWidget {
   @override
-  _CreateOrderCameraPageState createState() => _CreateOrderCameraPageState();
+  State<StatefulWidget> createState() => _CreateOrderCameraPageState();
 }
 
 class _CreateOrderCameraPageState extends State<CreateOrderCameraPage> {
   Barcode? result;
-  QRViewController? controller;
+  late QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scan QR Code'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
+        title: Text('Scan QR code'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
             ),
+            onPressed: () {
+              Navigator.of(context).pop(); // Navigate back to OrderPage
+            },
           ),
-          Text('Place the QR Code within the frame to scan'),
-          ElevatedButton(
-            onPressed: _turnOnLight,
-            child: Text('Tap to turn light on'),
+          IconButton( //temporarily
+            icon: Icon(
+              Icons.arrow_forward,
+              color: Colors.green,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CreateOrderPage()),
+              );
+            },
           ),
         ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Place the QR Code within the frame to scan',
+              style: TextStyle(fontSize: 18),
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 300,
+              height: 300,
+              child: QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text('Scanned Data: ${result?.code ?? 'No data yet'}'),
+          ],
+        ),
       ),
     );
   }
 
-  void _turnOnLight() {
-    controller?.toggleFlash();
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
+    setState(() {
+      this.controller = controller;
+    });
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
       });
     });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }
